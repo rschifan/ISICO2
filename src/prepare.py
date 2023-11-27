@@ -1,5 +1,5 @@
 
-from utils import *
+from src.utils import *
 
 import os
 import overpass
@@ -115,7 +115,7 @@ def get_city_extract(cityname):
     
     api = overpass.API(endpoint="https://overpass-api.de/api/interpreter", timeout=500)
 
-    bounds = f'{get_osm_basedir()}{normalize_cityname(cityname)}.boundary.json'
+    bounds = f'{get_osm_basedir()}{normalize_cityname(cityname)}.json'
 
     print(f"\nretrieving {cityname} boundary")
     area = ox.geocode_to_gdf(cityname)

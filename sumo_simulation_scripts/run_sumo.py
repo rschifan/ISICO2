@@ -20,14 +20,10 @@ except ImportError:
 
 import traci.constants as tc
 
-print(traci)
-
-
 # create the parser
 parser = argparse.ArgumentParser()
 init_arguments(parser)
 args = parser.parse_args()
-print(args)
 
 print("TraffiCO2 version 2.1")
 
@@ -43,12 +39,12 @@ save_dir = args.save_dir
 folder_prefix = args.prefix
 create_log = True
 
-#create simulation ID %d_%m_%H_%M_%S
+# create simulation ID %d_%m_%H_%M_%S
 sim_id = create_sim_id()
 
-#create directory for output
-save_dir=save_dir+folder_prefix+"_"+sim_id+"_"+str(np.random.randint(0, 1e9))
-os.mkdir(save_dir)
+# # create directory for output
+# save_dir= save_dir+folder_prefix+"_"+sim_id+"_"+str(np.random.randint(0, 1e9))
+# os.mkdir(save_dir)
 
 
 # max steps in secs
@@ -57,7 +53,7 @@ max_steps = args.max_hours*60*60
 # save v_edge every "sampling_freq" steps
 sampling_freq = 5*60 # 5 minutes
 
-#net_filename, route_filename = return_net_and_route_filenames(config_filename)
+# net_filename, route_filename = return_net_and_route_filenames(config_filename)
 total_vehicles = return_number_vehicles(route_filename)
 
 #configuration the simulation

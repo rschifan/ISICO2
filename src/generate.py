@@ -1,4 +1,4 @@
-from utils import *
+from src.utils import *
 
 import sys
 import sumolib
@@ -22,7 +22,7 @@ if 'SUMO_HOME' in os.environ:
     sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 
 
-n_vehicles = 200
+n_vehicles = 2000
 min_threshold_km = 1.2
 max_threshold_km = 10
 delta = 3600
@@ -287,29 +287,28 @@ def call_duarouter_command(command_str):
 
 
 
-def compute_routed_mobility_demand(cityname):
+def compute_routed_mobility_demand(cityname, output_directory):
 
     base_cityname = f"{get_net_basedir()}{normalize_cityname(cityname)}"
-    mobility_demand_filename = f"{base_cityname}.rou.xml"
-    output_demand_filename = f"{base_cityname}_routed_paths_duarouter.rou.xml"
-    dict_mobility_demand_path = f"{base_cityname}_dict_mobility_demand.json"
+    mobility_demand_filename = f"{output_directory}/demand.rou.xml"
+    output_demand_filename = f"{output_directory}/routed_paths_duarouter.rou.xml"
+    dict_mobility_demand_path = f"{output_directory}/dict_mobility_demand.json"
 
     options_duarouter = "--weights.random-factor "+str(weight)+" --max-alternatives 10 --remove-loops "+rm_loops+" "\
     "--weights.interpolate true --weights.minor-penalty 0 "\
     " --routing-threads 8"
 
-
-    command_str = "duarouter --route-files "+mobility_demand_filename+" "+\
-            " --net-file "+get_net_file(cityname)+" "+options_duarouter+\
+    command_str = "duarouter --route-files "+ mobility_demand_filename + " "+\
+            " --net-file "+ get_net_file(cityname)+" "+options_duarouter+\
         " --random false --seed "+str(seed_duarouter)+\
-        " --output-file "+output_demand_filename
+        " --output-file "+ output_demand_filename
 
     sumoCmd = [
         sumoBinary, 
         "-n", get_net_file(cityname), 
-        "-r","../sumo_simulation_data/config_init_traci.rou.xml",
+        "-r","sumo_simulation_data/config_init_traci.rou.xml",
         "--no-warnings","true",
-        "--error-log",f"{base_cityname}.traci.log",
+        "--error-log",f"{output_directory}demand.traci.log",
         "--no-step-log", "true"
         ]
     
@@ -322,7 +321,7 @@ def compute_routed_mobility_demand(cityname):
     print("\ngenerating mobility demand")
     od_pairs, departure_times, dict_mobility_demand = create_mobility_demand(n_vehicles, 
                                                                             road_network, 
-                                                                            base_cityname, 
+                                                                            f"{output_directory}/demand", 
                                                                             timing="uniform_range", 
                                                                             time_range=(0, 3601))
 
